@@ -24,7 +24,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [190, 195, 205, 200, 198, 200], 
     category: 'Grains', 
-    img: '🐤' 
+    img: '🐤',
+    price: "1.200",
+    sales_velocity: 45
   },
   { 
     sku: 'CANARY-05KG', 
@@ -34,7 +36,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [140, 145, 155, 150, 148, 150], 
     category: 'Grains', 
-    img: '🐤' 
+    img: '🐤',
+    price: "2.800",
+    sales_velocity: 30
   },
   { 
     sku: 'CANARY-10KG', 
@@ -44,7 +48,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 102,
     history: [75, 78, 85, 80, 82, 80],
     category: 'Grains', 
-    img: '🐤' 
+    img: '🐤',
+    price: "5.500",
+    sales_velocity: 15
   },
   { 
     sku: 'CANARY-35KG', 
@@ -54,7 +60,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 103,
     history: [20, 22, 28, 25, 24, 25],
     category: 'Grains', 
-    img: '🐤' 
+    img: '🐤',
+    price: "18.000",
+    sales_velocity: 5
   },
 
   // --- TAEEBA ---
@@ -66,7 +74,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 102,
     history: [110, 115, 118, 120, 119, 120], 
     category: 'Grains', 
-    img: '🌾' 
+    img: '🌾',
+    price: "2.500",
+    sales_velocity: 25
   },
   { 
     sku: 'TAEEBA-20KG', 
@@ -76,7 +86,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [40, 42, 48, 45, 44, 45], 
     category: 'Grains', 
-    img: '🌾' 
+    img: '🌾',
+    price: "9.800",
+    sales_velocity: 12
   },
   { 
     sku: 'TAEEBA-35KG', 
@@ -86,7 +98,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 103,
     history: [12, 14, 16, 15, 15, 15], 
     category: 'Grains', 
-    img: '🌾' 
+    img: '🌾',
+    price: "16.500",
+    sales_velocity: 4
   },
 
   // --- AL KHAIR ---
@@ -98,7 +112,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 102,
     history: [85, 88, 92, 90, 89, 90], 
     category: 'Grains', 
-    img: '🍚' 
+    img: '🍚',
+    price: "2.600",
+    sales_velocity: 20
   },
   { 
     sku: 'ALKHAIR-20KG', 
@@ -108,7 +124,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [30, 32, 38, 35, 34, 35], 
     category: 'Grains', 
-    img: '🍚' 
+    img: '🍚',
+    price: "10.000",
+    sales_velocity: 8
   },
   { 
     sku: 'ALKHAIR-35KG', 
@@ -118,7 +136,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 103,
     history: [15, 16, 20, 18, 18, 18], 
     category: 'Grains', 
-    img: '🍚' 
+    img: '🍚',
+    price: "17.000",
+    sales_velocity: 3
   },
 
   // --- PARBOILED ---
@@ -130,7 +150,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [55, 58, 62, 60, 59, 60], 
     category: 'Grains', 
-    img: '🥘' 
+    img: '🥘',
+    price: "4.500",
+    sales_velocity: 18
   },
 
   // --- BIN SOLAS ---
@@ -142,7 +164,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 102,
     history: [95, 98, 105, 100, 102, 100], 
     category: 'Grains', 
-    img: '🥡' 
+    img: '🥡',
+    price: "2.700",
+    sales_velocity: 28
   },
   { 
     sku: 'BINSOLAS-20KG', 
@@ -152,7 +176,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 103,
     history: [35, 38, 42, 40, 39, 40], 
     category: 'Grains', 
-    img: '🥡' 
+    img: '🥡',
+    price: "10.500",
+    sales_velocity: 10
   },
   { 
     sku: 'BINSOLAS-35KG', 
@@ -162,7 +188,9 @@ const INITIAL_PRODUCTS = [
     last_store_id: 101,
     history: [10, 11, 13, 12, 12, 12], 
     category: 'Grains', 
-    img: '🥡' 
+    img: '🥡',
+    price: "17.500",
+    sales_velocity: 2
   },
 ];
 
@@ -225,10 +253,11 @@ export default function InventoryAuditApp() {
       let data = saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
       
       // AUTO-INJECT SALES DATA FOR POC (Price in OMR & Weekly Velocity)
+      // This ensures we have sales data even if using previous local storage
       return data.map(p => ({
         ...p,
-        price: p.price || (Math.random() * 5 + 1).toFixed(3), // Random OMR price 1.000 to 6.000
-        sales_velocity: p.sales_velocity || Math.floor(Math.random() * 40) + 5 // Units sold per week
+        price: p.price || (Math.random() * 5 + 1).toFixed(3), // Fallback if missing
+        sales_velocity: p.sales_velocity || Math.floor(Math.random() * 40) + 5 // Fallback if missing
       }));
     } catch (e) {
       return INITIAL_PRODUCTS;
@@ -689,7 +718,7 @@ export default function InventoryAuditApp() {
                         {Math.abs(calculateTotalStock() - calculateLastMonthStock())}
                       </div>
                       <div className={`flex items-center text-sm font-medium mb-1.5 ${
-                        calculateTotalStock() >= calculateLastMonthStock() ? 'text-green-600' : 'text-red-600'
+                        calculateTotalStock() >= calculateLastMonthStock() ? 'text-red-600' : 'text-green-600'
                       }`}>
                         {calculateTotalStock() >= calculateLastMonthStock() ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                         <span>{Math.abs(calculateTotalStock() - calculateLastMonthStock()) > 0 ? (calculateTotalStock() > calculateLastMonthStock() ? 'Increase' : 'Decrease') : 'No Change'}</span>
@@ -705,17 +734,17 @@ export default function InventoryAuditApp() {
                       <h4 className="font-semibold text-slate-700">Detailed Variance Analysis</h4>
                     </div>
                     <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
-                      <tr>
-                        <th className="p-4">Product</th>
-                        <th className="p-4 text-right">Current</th>
-                        <th className="p-4 text-right">Previous</th>
-                        <th className="p-4 text-right">Diff</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {filteredProducts.map(p => {
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
+                          <tr>
+                            <th className="p-4">Product</th>
+                            <th className="p-4 text-right">Current</th>
+                            <th className="p-4 text-right">Previous</th>
+                            <th className="p-4 text-right">Diff</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {filteredProducts.map(p => {
                             const lastMonth = p.history[p.history.length - 1] || 0;
                             const diff = p.last_count - lastMonth;
                             return (
@@ -733,7 +762,7 @@ export default function InventoryAuditApp() {
                                 <td className="p-4 text-right font-mono text-slate-500">{lastMonth}</td>
                                 <td className="p-4 text-right font-mono">
                                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
-                                    diff > 0 ? 'bg-green-100 text-green-700' : diff < 0 ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'
+                                    diff > 0 ? 'bg-red-100 text-red-700' : diff < 0 ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
                                   }`}>
                                     {diff > 0 ? <TrendingUp size={12} /> : diff < 0 ? <TrendingDown size={12} /> : <Minus size={12} />}
                                     {Math.abs(diff)}
